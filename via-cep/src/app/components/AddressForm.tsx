@@ -1,11 +1,17 @@
 'use client'
 import { useState } from 'react';
 import axios from 'axios';
+import * as S from './AddressForm.styled';
 
 interface Address {
+  name: string;
+  email: string;
   street: string;
   number: string;
+  bairro: string;
+  uf: string;
   complement?: string;
+  password: string;
 }
 
 interface AddressFormProps {
@@ -14,9 +20,14 @@ interface AddressFormProps {
 }
 
 const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [cep, setCep] = useState('');
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [uf, setUf] = useState('');
   const [complement, setComplement] = useState('');
 
   const fetchAddress = async (cep: string) => {
@@ -43,11 +54,16 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddAddress({ street, number, complement });
+    onAddAddress({ name, email, senha, street, number, bairro, uf, complement });
     // Limpar os campos após o envio
+    setName('');
+    setEmail('');
+    setPassword('');
     setCep('');
     setStreet('');
     setNumber('');
+    setBairro('');
+    setUf('');
     setComplement('');
   };
 
@@ -75,7 +91,28 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
         </>
       )}
       
-      <form onSubmit={handleSubmit}>
+      <S.FormContacts onSubmit={handleSubmit}>
+      <input
+          type="text"
+          value={name}
+          placeholder="Nome"
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          value={email}
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+         <input
+          type="text"
+          value={password}
+          placeholder="Senha"
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <input
           type="text"
           value={cep}
@@ -100,12 +137,26 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
         />
         <input
           type="text"
+          value={bairro}
+          placeholder="Bairro"
+          onChange={(e) => setBairro(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          value={uf}
+          placeholder="UF"
+          onChange={(e) => setUf(e.target.value)}
+          required
+        />
+        <input
+          type="text"
           value={complement}
           placeholder="Complemento (opcional)"
           onChange={(e) => setComplement(e.target.value)}
         />
         <button type="submit">Adicionar Endereço</button>
-      </form>
+      </S.FormContacts>
     </div>
   );
 };

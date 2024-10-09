@@ -1,8 +1,12 @@
 import React from 'react';
 
 interface Address {
+  name: string;
+  email: string;
   street: string;
   number: string;
+  bairro: string;
+  uf: string;
   complement?: string;
 }
 
@@ -21,13 +25,27 @@ const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses }) =>
   return (
     <div>
       <ul>
-        {addresses.map((address, index) => (
-          <li key={index}>
-            {`${address.street}, ${address.number} ${address.complement ? `(${address.complement})` : ''}`}
-            <button onClick={() => handleDelete(index)}>Excluir</button>
-          </li>
-        ))}
-      </ul>
+            {addresses.map((address, index) => (
+                <li key={index}>
+                {`Nome: ${address.name},`}
+                <br />
+                {`E-mail: ${address.email}`}
+                <br />
+                {`CEP: ${address.street}`}
+                <br />
+                {`Número: ${address.number}`}
+                <br />
+                {`Bairro: ${address.bairro}`}
+                <br />
+                {`UF: ${address.uf}`}
+                <br />
+                {`Complemento: ${address.complement ? `(${address.complement})` : ''}`}
+                <br />
+                <button onClick={() => handleDelete(index)}>Excluir</button>
+                <hr></hr>
+                </li>
+            ))}
+        </ul>
     </div>
   );
 };

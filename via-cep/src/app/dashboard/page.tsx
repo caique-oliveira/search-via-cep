@@ -64,11 +64,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <h1>Meus Endereços</h1>
-
       {mainAddress && (
         <div style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-          <h2>Endereço Principal:</h2>
+          <h2>Meu Endereço:</h2>
           {isEditing ? (
             <>
               <input
@@ -85,11 +83,12 @@ const Dashboard: React.FC = () => {
               <p>{mainAddress}</p>
               <button onClick={() => setIsEditing(true)}>Editar</button>
               <button onClick={handleDeleteMainAddress}>Excluir</button>
+              <button onClick={handleDeleteAccount}>Excluir Conta</button>
             </>
           )}
         </div>
       )}
-
+      <h1>Meus Contatos</h1>
       <AddressList addresses={addresses} setAddresses={setAddresses} />
       <hr></hr>
       <AddressForm 
@@ -97,7 +96,6 @@ const Dashboard: React.FC = () => {
         searchedAddress={searchedAddress} // Passar o endereço buscado
       />
       <hr></hr>
-      <button onClick={handleDeleteAccount}>Excluir Conta</button>
     </div>
   );
 };
