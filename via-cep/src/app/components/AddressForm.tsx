@@ -54,7 +54,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddAddress({ name, email, senha, street, number, bairro, uf, complement });
+    onAddAddress({ name, email, password, street, number, bairro, uf, complement });
     // Limpar os campos após o envio
     setName('');
     setEmail('');

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddressForm from '../components/AddressForm';
 import AddressList from '../components/AddressList';
+import MapComponent from '../components/MapComponent';
 
 interface Address {
   street: string;
@@ -95,6 +96,7 @@ const Dashboard: React.FC = () => {
         onAddAddress={handleAddAddress} 
         searchedAddress={searchedAddress} // Passar o endereço buscado
       />
+      <MapComponent addresses={addresses} />
       <hr></hr>
     </div>
   );
