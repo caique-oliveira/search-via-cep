@@ -71,11 +71,9 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
 
   return (
     <>
-    <S.TitleSession>Cadastre novos contatos</S.TitleSession>
     <S.ContainerForm>
       {searchedAddress && (
         <>
-          <hr />
           <div style={{
             padding: '10px',
             backgroundColor: '#f9f9f9',
@@ -91,10 +89,9 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
             <h3>Endereço buscado:</h3>
             <p>{searchedAddress}</p>
           </div>
-          <hr />
         </>
       )}
-      
+       <S.TitleSession>Cadastre novos contatos</S.TitleSession>
       <S.FormContacts onSubmit={handleSubmit}>
       <input
           type="text"
@@ -161,7 +158,6 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
         />
         <button type="submit">Adicionar Endereço</button>
       </S.FormContacts>
-      <MapComponent addresses={addresses} />
     </S.ContainerForm>
     </>
   );

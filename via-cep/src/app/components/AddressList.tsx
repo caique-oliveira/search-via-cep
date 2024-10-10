@@ -25,6 +25,7 @@ const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses, onSe
 
   return (
     <div>
+      <h1>Meus Contatos</h1>
       <ul>
         {addresses.map((address, index) => (
           <li
@@ -49,7 +50,7 @@ const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses, onSe
             <button onClick={() => handleDelete(index)}>Excluir</button>
             <hr />
           </li>
-        ))}
+        ))} 
       </ul>
     </div>
   );

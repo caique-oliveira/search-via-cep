@@ -1,8 +1,11 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Script from 'next/script'; // Importando o Script
 import AddressForm from '../components/AddressForm';
 import AddressList from '../components/AddressList';
+import MapComponent from '../components/MapComponent';
+import * as S from './dashboard.styled';
 
 interface Address {
   street: string;
@@ -15,7 +18,8 @@ const Dashboard: React.FC = () => {
   const [mainAddress, setMainAddress] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newMainAddress, setNewMainAddress] = useState<string>('');
-  const [searchedAddress] = useState<string | null>(null); // Estado para endereço buscado
+  const [searchedAddress] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null); // Adicionando estado para localização selecionada
   const router = useRouter();
 
   useEffect(() => {
@@ -66,7 +70,6 @@ const Dashboard: React.FC = () => {
     const fullAddress = `${address.street}, ${address.number}`;
     const geocoder = new google.maps.Geocoder();
     
-    // Geocodificar o endereço para obter a posição
     geocoder.geocode({ address: fullAddress }, (results, status) => {
       if (status === "OK" && results[0]) {
         const position = results[0].geometry.location;
@@ -78,7 +81,14 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div>
+    <S.ContainerDashboard>
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY`}
+        strategy="afterInteractive"
+        onLoad={() => {
+          console.log('Google Maps script loaded');
+        }}
+      />
       {mainAddress && (
         <div style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
           <h2>Meu Endereço:</h2>
@@ -103,15 +113,13 @@ const Dashboard: React.FC = () => {
           )}
         </div>
       )}
-      <h1>Meus Contatos</h1>
       <AddressList addresses={addresses} setAddresses={setAddresses} onSelectAddress={handleSelectAddress} />
-      <hr></hr>
+      <MapComponent addresses={addresses} selectedLocation={selectedLocation} /> {/* Passando a localização selecionada */}
       <AddressForm 
         onAddAddress={handleAddAddress} 
-        searchedAddress={searchedAddress} // Passar o endereço buscado
+        searchedAddress={searchedAddress} 
       />
-      <hr></hr>
-    </div>
+    </S.ContainerDashboard>
   );
 };
 
