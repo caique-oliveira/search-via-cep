@@ -3,11 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 
 interface MapComponentProps {
   addresses: Array<{ street: string; number: string }>;
+  selectedLocation: { lat: number; lng: number } | null; // Adicione esta linha
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ addresses }) => {
+const MapComponent: React.FC<MapComponentProps> = ({ addresses, selectedLocation }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [map, setMap] = useState<google.maps.Map | null>(null); // Estado para o mapa
 
   useEffect(() => {
     const loadGoogleMapsScript = () => {
@@ -24,21 +26,22 @@ const MapComponent: React.FC<MapComponentProps> = ({ addresses }) => {
 
   useEffect(() => {
     if (isLoaded && mapRef.current) {
-      const map = new google.maps.Map(mapRef.current, {
+      const newMap = new google.maps.Map(mapRef.current, {
         zoom: 5,
         center: { lat: -14.2350, lng: -51.9253 }, // Centro do Brasil
       });
-
-      const geocoder = new google.maps.Geocoder();
+      setMap(newMap); // Armazena a instância do mapa
 
       addresses.forEach((address) => {
         const fullAddress = `${address.street}, ${address.number}`;
+        const geocoder = new google.maps.Geocoder();
+        
         geocoder.geocode({ address: fullAddress }, (results, status) => {
           if (status === "OK" && results[0]) {
             const position = results[0].geometry.location;
             new google.maps.Marker({
               position,
-              map,
+              map: newMap,
               title: fullAddress,
             });
           }
@@ -47,7 +50,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ addresses }) => {
     }
   }, [isLoaded, addresses]);
 
-  return <div ref={mapRef} style={{ width: '100%', height: '600px', border: '2px solid #ccc', borderRadius: '10px' }} />;
+  useEffect(() => {
+    if (map && selectedLocation) {
+      map.setCenter(selectedLocation); // Atualiza o centro do mapa
+      map.setZoom(15); // Ajusta o zoom
+    }
+  }, [map, selectedLocation]); // Atualiza sempre que o mapa ou a localização selecionada mudar
+
+  return <div ref={mapRef} style={{ width: '100%', height: '600px', border: '2px solid #ccc', borderRadius: '10px', marginTop: '15px' }} />;
 };
 
 export default MapComponent;

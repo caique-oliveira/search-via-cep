@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import * as S from './AddressForm.styled';
+import MapComponent from '../components/MapComponent';
 
 interface Address {
   name: string;
@@ -29,6 +30,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
   const [bairro, setBairro] = useState('');
   const [uf, setUf] = useState('');
   const [complement, setComplement] = useState('');
+  const [addresses, setAddresses] = useState<Address[]>([]);
 
   const fetchAddress = async (cep: string) => {
     try {
@@ -68,7 +70,9 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
   };
 
   return (
-    <div>
+    <>
+    <S.TitleSession>Cadastre novos contatos</S.TitleSession>
+    <S.ContainerForm>
       {searchedAddress && (
         <>
           <hr />
@@ -157,7 +161,9 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
         />
         <button type="submit">Adicionar Endereço</button>
       </S.FormContacts>
-    </div>
+      <MapComponent addresses={addresses} />
+    </S.ContainerForm>
+    </>
   );
 };
 

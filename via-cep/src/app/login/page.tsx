@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import * as S from './login.styled';
 
 interface FormData {
   name: string;
@@ -81,9 +82,9 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <S.ContainerLogin>
       <h1>{isLogin ? 'Login' : 'Cadastro'}</h1>
-      <form onSubmit={handleSubmit}>
+      <S.FormLogin onSubmit={handleSubmit}>
         {!isLogin && (
           <input 
             name="name" 
@@ -142,11 +143,11 @@ const LoginPage: React.FC = () => {
         )}
 
         <button type="submit">{isLogin ? 'Login' : 'Cadastrar'}</button>
-      </form>
+      </S.FormLogin>
       <a href="#" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Ainda não sou cadastrado' : 'Já sou cadastrado'}
       </a>
-    </div>
+    </S.ContainerLogin>
   );
 };
 

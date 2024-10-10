@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddressForm from '../components/AddressForm';
 import AddressList from '../components/AddressList';
-import MapComponent from '../components/MapComponent';
 
 interface Address {
   street: string;
@@ -63,6 +62,21 @@ const Dashboard: React.FC = () => {
     alert('Endereço principal excluído.');
   };
 
+  const handleSelectAddress = (address: { street: string; number: string }) => {
+    const fullAddress = `${address.street}, ${address.number}`;
+    const geocoder = new google.maps.Geocoder();
+    
+    // Geocodificar o endereço para obter a posição
+    geocoder.geocode({ address: fullAddress }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        const position = results[0].geometry.location;
+        setSelectedLocation({ lat: position.lat(), lng: position.lng() }); // Atualiza a localização selecionada
+      } else {
+        console.error("Geocodificação falhou: " + status);
+      }
+    });
+  };
+
   return (
     <div>
       {mainAddress && (
@@ -90,13 +104,12 @@ const Dashboard: React.FC = () => {
         </div>
       )}
       <h1>Meus Contatos</h1>
-      <AddressList addresses={addresses} setAddresses={setAddresses} />
+      <AddressList addresses={addresses} setAddresses={setAddresses} onSelectAddress={handleSelectAddress} />
       <hr></hr>
       <AddressForm 
         onAddAddress={handleAddAddress} 
         searchedAddress={searchedAddress} // Passar o endereço buscado
       />
-      <MapComponent addresses={addresses} />
       <hr></hr>
     </div>
   );
