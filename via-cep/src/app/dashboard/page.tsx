@@ -1,15 +1,19 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Script from 'next/script'; // Importando o Script
+import Script from 'next/script';
 import AddressForm from '../components/AddressForm';
 import AddressList from '../components/AddressList';
-import MapComponent from '../components/MapComponent';
+import MapComponent from '../components/Map';
 import * as S from './dashboard.styled';
 
 interface Address {
+  name: string;
+  email: string;
   street: string;
   number: string;
+  bairro: string;
+  uf: string;
   complement?: string;
 }
 
@@ -18,8 +22,8 @@ const Dashboard: React.FC = () => {
   const [mainAddress, setMainAddress] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newMainAddress, setNewMainAddress] = useState<string>('');
-  const [searchedAddress] = useState<string | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null); // Adicionando estado para localização selecionada
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [searchedAddress, setSearchedAddress] = useState<string | null>(null); // Adicione esta linha
   const router = useRouter();
 
   useEffect(() => {
@@ -40,30 +44,11 @@ const Dashboard: React.FC = () => {
     }
   }, [router]);
 
+  // Função para adicionar um novo endereço
   const handleAddAddress = (address: Address) => {
     const updatedAddresses = [...addresses, address];
     setAddresses(updatedAddresses);
     localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
-  };
-
-  const handleDeleteAccount = () => {
-    localStorage.removeItem('userData');
-    localStorage.removeItem('addresses');
-    localStorage.removeItem('mainAddress');
-    localStorage.removeItem('isLoggedIn');
-    router.push('/login');
-  };
-
-  const handleEditMainAddress = () => {
-    setMainAddress(newMainAddress);
-    localStorage.setItem('mainAddress', newMainAddress);
-    setIsEditing(false);
-  };
-
-  const handleDeleteMainAddress = () => {
-    setMainAddress(null);
-    localStorage.removeItem('mainAddress');
-    alert('Endereço principal excluído.');
   };
 
   const handleSelectAddress = (address: { street: string; number: string }) => {
@@ -73,7 +58,8 @@ const Dashboard: React.FC = () => {
     geocoder.geocode({ address: fullAddress }, (results, status) => {
       if (status === "OK" && results[0]) {
         const position = results[0].geometry.location;
-        setSelectedLocation({ lat: position.lat(), lng: position.lng() }); // Atualiza a localização selecionada
+        setSelectedLocation({ lat: position.lat(), lng: position.lng() });
+        setSearchedAddress(fullAddress); // Atualize o estado aqui
       } else {
         console.error("Geocodificação falhou: " + status);
       }
@@ -114,10 +100,10 @@ const Dashboard: React.FC = () => {
         </div>
       )}
       <AddressList addresses={addresses} setAddresses={setAddresses} onSelectAddress={handleSelectAddress} />
-      <MapComponent addresses={addresses} selectedLocation={selectedLocation} /> {/* Passando a localização selecionada */}
+      <MapComponent selectedLocation={selectedLocation} />
       <AddressForm 
         onAddAddress={handleAddAddress} 
-        searchedAddress={searchedAddress} 
+        searchedAddress={searchedAddress}
       />
     </S.ContainerDashboard>
   );

@@ -1,3 +1,5 @@
+// src/app/components/AddressList.tsx
+
 import React from 'react';
 
 interface Address {
@@ -13,7 +15,7 @@ interface Address {
 interface AddressListProps {
   addresses: Address[];
   setAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
-  onSelectAddress: (address: { street: string; number: string }) => void; // Adicione esta linha
+  onSelectAddress: (address: { street: string; number: string }) => void; 
 }
 
 const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses, onSelectAddress }) => {
@@ -30,7 +32,7 @@ const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses, onSe
         {addresses.map((address, index) => (
           <li
             key={index}
-            onClick={() => onSelectAddress({ street: address.street, number: address.number })} // Certifique-se de que essa função exista
+            onClick={() => onSelectAddress({ street: address.street, number: address.number })}
             style={{ cursor: 'pointer' }}
           >
             {`Nome: ${address.name},`}
