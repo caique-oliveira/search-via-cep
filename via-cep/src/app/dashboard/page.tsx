@@ -88,15 +88,12 @@ const Dashboard: React.FC = () => {
                 onChange={(e) => setNewMainAddress(e.target.value)}
                 placeholder="Novo Endereço Principal"
               />
-              {/*<button onClick={handleEditMainAddress}>Salvar</button>*/}
               <button onClick={() => setIsEditing(false)}>Cancelar</button>
             </>
           ) : (
             <>
               <p>{mainAddress}</p>
               <button onClick={() => setIsEditing(true)}>Editar</button>
-              {/*<button onClick={handleDeleteMainAddress}>Excluir</button>
-              <button onClick={handleDeleteAccount}>Excluir Conta</button>*/}
             </>
           )}
         </div>

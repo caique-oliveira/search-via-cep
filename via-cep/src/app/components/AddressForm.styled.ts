@@ -71,6 +71,20 @@ export const ButtonForm = styled.button`
     color: #fff;
     font-size: 15px;
     font-weight: 600;
+    margin-left: 10px;
+}
+`;
+export const ButtonDeleteAccont = styled.button`
+    height: 40px;
+    width: 120px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: radial-gradient(circle at 10% 20%, rgb(7, 121, 222) 0%, rgb(20, 72, 140) 90%);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    margin-left: 10px;
 }
 `;
 export const TitleContacts = styled.h1`

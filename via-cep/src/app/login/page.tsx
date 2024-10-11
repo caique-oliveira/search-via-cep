@@ -123,7 +123,7 @@ const LoginPage: React.FC = () => {
               required 
             />
             {address && (
-              <div style={{ marginTop: '5px', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+              <div style={{ marginTop: '5px', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', width: '100%', marginLeft: '2%' }}>
                 {address}
               </div>
             )}
