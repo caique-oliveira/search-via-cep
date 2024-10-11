@@ -1,5 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client"
+import React, { useEffect, useState, createContext } from 'react';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 import AddressForm from '../components/AddressForm';
@@ -56,7 +58,7 @@ const Dashboard: React.FC = () => {
     const geocoder = new google.maps.Geocoder();
     
     geocoder.geocode({ address: fullAddress }, (results, status) => {
-      if (status === "OK" && results[0]) {
+      if (status === "OK" && results?.[0]) {
         const position = results[0].geometry.location;
         setSelectedLocation({ lat: position.lat(), lng: position.lng() });
         setSearchedAddress(fullAddress); // Atualize o estado aqui
@@ -69,7 +71,7 @@ const Dashboard: React.FC = () => {
   return (
     <S.ContainerDashboard>
       <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY`}
+        src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyAWX0_W5BQv53q-VdTJXX7-wHgFgidEcKk`}
         strategy="afterInteractive"
         onLoad={() => {
           console.log('Google Maps script loaded');
@@ -86,21 +88,31 @@ const Dashboard: React.FC = () => {
                 onChange={(e) => setNewMainAddress(e.target.value)}
                 placeholder="Novo Endereço Principal"
               />
-              <button onClick={handleEditMainAddress}>Salvar</button>
+              {/*<button onClick={handleEditMainAddress}>Salvar</button>*/}
               <button onClick={() => setIsEditing(false)}>Cancelar</button>
             </>
           ) : (
             <>
               <p>{mainAddress}</p>
               <button onClick={() => setIsEditing(true)}>Editar</button>
-              <button onClick={handleDeleteMainAddress}>Excluir</button>
-              <button onClick={handleDeleteAccount}>Excluir Conta</button>
+              {/*<button onClick={handleDeleteMainAddress}>Excluir</button>
+              <button onClick={handleDeleteAccount}>Excluir Conta</button>*/}
             </>
           )}
         </div>
       )}
-      <AddressList addresses={addresses} setAddresses={setAddresses} onSelectAddress={handleSelectAddress} />
-      <MapComponent selectedLocation={selectedLocation} />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ flex: 1, marginRight: '20px' }}>
+          <AddressList 
+            addresses={addresses} 
+            setAddresses={setAddresses} 
+            onSelectAddress={handleSelectAddress} 
+          />
+        </div>
+        <div style={{ flex: 2, marginTop: '40px' }}>
+          <MapComponent selectedLocation={selectedLocation} />
+        </div>
+      </div>
       <AddressForm 
         onAddAddress={handleAddAddress} 
         searchedAddress={searchedAddress}

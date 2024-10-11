@@ -1,6 +1,9 @@
 'use client';
 import { useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import Modal from './Modal';
 import * as S from './AddressForm.styled';
 
 interface Address {
@@ -29,6 +32,11 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
   const [bairro, setBairro] = useState('');
   const [uf, setUf] = useState('');
   const [complement, setComplement] = useState('');
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleToggleModal = () => {
+    setModalOpen(prev => !prev);
+  };
 
   const fetchAddress = async (cep: string) => {
     try {
@@ -56,7 +64,6 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onAddAddress({ name, email, password, street, number, bairro, uf, complement });
-    // Limpar os campos após o envio
     setName('');
     setEmail('');
     setPassword('');
@@ -66,30 +73,33 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
     setBairro('');
     setUf('');
     setComplement('');
+    setModalOpen(false); // Fechar o modal após o envio
   };
 
   return (
-    <S.ContainerForm>
-      {searchedAddress && (
-        <div>
-          <h3>Endereço buscado:</h3>
-          <p>{searchedAddress}</p>
-        </div>
-      )}
-      <S.TitleSession>Cadastre novos contatos</S.TitleSession>
-      <S.FormContacts onSubmit={handleSubmit}>
-        <input type="text" value={name} placeholder="Nome" onChange={(e) => setName(e.target.value)} required />
-        <input type="text" value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
-        <input type="text" value={password} placeholder="Senha" onChange={(e) => setPassword(e.target.value)} required />
-        <input type="text" value={cep} placeholder="CEP" onChange={(e) => setCep(e.target.value)} onBlur={handleCepBlur} required />
-        <input type="text" value={street} placeholder="Rua" onChange={(e) => setStreet(e.target.value)} required />
-        <input type="text" value={number} placeholder="Número" onChange={(e) => setNumber(e.target.value)} required />
-        <input type="text" value={bairro} placeholder="Bairro" onChange={(e) => setBairro(e.target.value)} required />
-        <input type="text" value={uf} placeholder="UF" onChange={(e) => setUf(e.target.value)} required />
-        <input type="text" value={complement} placeholder="Complemento (opcional)" onChange={(e) => setComplement(e.target.value)} />
-        <button type="submit">Adicionar Endereço</button>
-      </S.FormContacts>
-    </S.ContainerForm>
+    <>
+      <S.ButtonOpenModal onClick={handleToggleModal}>
+        <FontAwesomeIcon icon={faPlus} /> Adicionar Novo Contato
+      </S.ButtonOpenModal>
+      
+      <Modal isOpen={isModalOpen} onClose={handleToggleModal}>
+        <S.ContainerForm>
+          <S.TitleSession>Cadastre novos contatos</S.TitleSession>
+          <S.FormContacts onSubmit={handleSubmit}>
+            <input type="text" value={name} placeholder="Nome" onChange={(e) => setName(e.target.value)} required />
+            <input type="text" value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
+            <input type="text" value={password} placeholder="Senha" onChange={(e) => setPassword(e.target.value)} required />
+            <input type="text" value={cep} placeholder="CEP" onChange={(e) => setCep(e.target.value)} onBlur={handleCepBlur} required />
+            <input type="text" value={street} placeholder="Rua" onChange={(e) => setStreet(e.target.value)} required />
+            <input type="text" value={number} placeholder="Número" onChange={(e) => setNumber(e.target.value)} required />
+            <input type="text" value={bairro} placeholder="Bairro" onChange={(e) => setBairro(e.target.value)} required />
+            <input type="text" value={uf} placeholder="UF" onChange={(e) => setUf(e.target.value)} required />
+            <input type="text" value={complement} placeholder="Complemento (opcional)" onChange={(e) => setComplement(e.target.value)} />
+            <button type="submit">Adicionar Novo Contato</button>
+          </S.FormContacts>
+        </S.ContainerForm>
+      </Modal>
+    </>
   );
 };
 

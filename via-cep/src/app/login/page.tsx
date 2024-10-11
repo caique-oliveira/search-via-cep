@@ -69,7 +69,8 @@ const LoginPage: React.FC = () => {
       } else {
         setAddress('CEP não encontrado');
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error:unknown) {
       setAddress('Erro ao buscar o CEP');
     }
   };
