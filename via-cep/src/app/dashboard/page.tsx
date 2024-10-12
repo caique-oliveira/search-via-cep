@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const storedAddresses = localStorage.getItem('addresses');
     const storedMainAddress = localStorage.getItem('mainAddress');
-
+  
     if (!isLoggedIn) {
       router.push('/login');
     } else {
@@ -61,9 +61,10 @@ const Dashboard: React.FC = () => {
       if (status === "OK" && results?.[0]) {
         const position = results[0].geometry.location;
         setSelectedLocation({ lat: position.lat(), lng: position.lng() });
-        setSearchedAddress(fullAddress); // Atualize o estado aqui
+        console.log('Selected Location:', selectedLocation);
       } else {
         console.error("Geocodificação falhou: " + status);
+        
       }
     });
   };

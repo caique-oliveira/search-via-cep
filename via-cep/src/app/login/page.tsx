@@ -13,6 +13,17 @@ interface FormData {
   complement?: string;
 }
 
+interface Address {
+  password: string;
+  name: string;
+  email: string;
+  street: string;
+  number: string;
+  bairro: string;
+  uf: string;
+  complement?: string;
+}
+
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -23,15 +34,13 @@ const LoginPage: React.FC = () => {
     complement: '',
   });
 
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
-    // Se o campo for o CEP, limpa o endereço
     if (name === 'cep') {
       setAddress(null);
     }
@@ -39,20 +48,26 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
+    const storedUserData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const storedAddresses = JSON.parse(localStorage.getItem('addresses') || '[]');
+
     if (isLogin) {
-      const storedData = JSON.parse(localStorage.getItem('userData') || '{}');
-      if (storedData.email === formData.email && storedData.password === formData.password) {
-        localStorage.setItem('isLoggedIn', 'true'); // Armazenar o estado de login
+      const foundUser = storedAddresses.find((address: Address) => address.email === formData.email && address.password === formData.password);
+
+      if (foundUser || (storedUserData.email === formData.email && storedUserData.password === formData.password)) {
+        localStorage.setItem('isLoggedIn', 'true');
         router.push('/dashboard');
       } else {
         alert('Email ou senha incorretos');
       }
     } else {
-      // Cadastro
       if (formData.name && formData.email && formData.password && formData.cep && formData.number) {
-        localStorage.setItem('userData', JSON.stringify(formData));
-        localStorage.setItem('isLoggedIn', 'true'); // Armazenar o estado de login
+        localStorage.setItem('userData', JSON.stringify({ 
+          email: formData.email, 
+          password: formData.password 
+        }));
+        localStorage.setItem('isLoggedIn', 'true');
         router.push('/dashboard');
       } else {
         alert('Preencha todos os campos obrigatórios.');
@@ -69,14 +84,13 @@ const LoginPage: React.FC = () => {
       } else {
         setAddress('CEP não encontrado');
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error:unknown) {
+    } catch (error) {
       setAddress('Erro ao buscar o CEP');
     }
   };
 
   const handleCepBlur = () => {
-    const cleanCep = formData.cep.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    const cleanCep = formData.cep.replace(/\D/g, '');
     if (cleanCep.length === 8) {
       fetchAddress(cleanCep);
     }
@@ -111,7 +125,6 @@ const LoginPage: React.FC = () => {
           required 
         />
         
-        {/* Exibir campo de CEP apenas para cadastro */}
         {!isLogin && (
           <>
             <input 

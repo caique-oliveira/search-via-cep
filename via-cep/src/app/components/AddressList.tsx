@@ -1,4 +1,3 @@
-// src/app/components/AddressList.tsx
 import React, { useState } from 'react';
 import * as S from './AddressForm.styled';
 import MapComponent from './MapComponent';
@@ -29,23 +28,21 @@ const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses, onSe
   };
 
   const handleSaveClick = () => {
-    if (editAddress) {
+    if (editAddress && isEditing !== null) {
       const updatedAddresses = [...addresses];
-      updatedAddresses[isEditing as number] = editAddress;
+      updatedAddresses[isEditing] = editAddress;
       setAddresses(updatedAddresses);
       localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
-      setIsEditing(null); // Resetar edição
+      setIsEditing(null);
     }
   };
 
-  const handleDeleteAccount = () => {
-    if (isEditing !== null) {
-      const updatedAddresses = addresses.filter((_, index) => index !== isEditing);
-      setAddresses(updatedAddresses);
-      localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
-      setIsEditing(null); // Reseta a edição
-      window.location.href = '/';
-    }
+  const handleDeleteAccount = (index: number) => {
+    const updatedAddresses = addresses.filter((_, i) => i !== index);
+    setAddresses(updatedAddresses);
+    localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+    setIsEditing(null);
+    window.location.href = '/';
   };
 
   return (
@@ -60,50 +57,54 @@ const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses, onSe
           >
             {isEditing === index ? (
               <>
-              <span>Nome:</span>
+                <span>Nome:</span>
                 <input style={{ marginLeft: '15%', width: '70%' }}
                   type="text"
                   value={editAddress?.name}
+                  required
                   onChange={(e) => setEditAddress({ ...editAddress!, name: e.target.value })}
                 />
-                <br></br>
+                <br />
                 <span>E-mail:</span>
                 <input style={{ marginLeft: '14%', width: '70%' }}
                   type="text"
                   value={editAddress?.email}
+                  required
                   onChange={(e) => setEditAddress({ ...editAddress!, email: e.target.value })}
                 />
-                <br></br>
+                <br />
                 <span>Endereço:</span>
                 <input
                   type="text" style={{ marginLeft: '7.3%', width: '70%' }}
                   value={editAddress?.street}
+                  required
                   onChange={(e) => setEditAddress({ ...editAddress!, street: e.target.value })}
                 />
-                <br></br>
+                <br />
                 <span>Número:</span>
                 <input
                   type="text" style={{ marginLeft: '10.7%', width: '70.1%' }}
                   value={editAddress?.number}
+                  required
                   onChange={(e) => setEditAddress({ ...editAddress!, number: e.target.value })}
                 />
-                <br></br>
+                <br />
                 <span>Bairro:</span>
                 <input style={{ marginLeft: '14.6%', width: '70%' }}
                   type="text"
                   value={editAddress?.bairro}
+                  required
                   onChange={(e) => setEditAddress({ ...editAddress!, bairro: e.target.value })}
                 />
-                <br></br>
+                <br />
                 <span>Complemento:</span>
                 <input style={{ marginLeft: '2%', width: '67.2%' }}
                   type="text"
                   value={editAddress?.complement}
                   onChange={(e) => setEditAddress({ ...editAddress!, complement: e.target.value })}
                 />
-                {/* Adicione outros campos conforme necessário */}
                 <S.ButtonForm onClick={handleSaveClick}>Salvar</S.ButtonForm>
-                <S.ButtonForm onClick={handleDeleteAccount}>Excluir Conta</S.ButtonForm>
+                <S.ButtonForm onClick={() => handleDeleteAccount(isEditing)}>Excluir Conta</S.ButtonForm>
               </>
             ) : (
               <>
@@ -122,12 +123,12 @@ const AddressList: React.FC<AddressListProps> = ({ addresses, setAddresses, onSe
                 {`Complemento: ${address.complement ? `(${address.complement})` : ''}`}
                 <br />
                 <S.ButtonForm onClick={() => handleEditClick(index)}>Editar</S.ButtonForm>
-                <S.ButtonForm onClick={() => handleDeleteAccount()}>Excluir</S.ButtonForm>
-                <S.ButtonDeleteAccont onClick={handleDeleteAccount}>Excluir Conta</S.ButtonDeleteAccont>
+                <S.ButtonForm onClick={() => handleDeleteAccount(index)}>Excluir</S.ButtonForm>
+                <S.ButtonDeleteAccont onClick={() => handleDeleteAccount(index)}>Excluir Conta</S.ButtonDeleteAccont>
               </>
             )}
           </S.ListForm>
-        ))} 
+        ))}
       </ul>
     </div>
   );

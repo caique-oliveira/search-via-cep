@@ -62,8 +62,14 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
   };
 
   const handleSubmit = (e: React.FormEvent) => {
+
     e.preventDefault();
-    onAddAddress({ name, email, password, street, number, bairro, uf, complement });
+    const newAddress = { name, email, password, street, number, bairro, uf, complement };
+
+    // Armazenar os dados do contato no LocalStorage
+    const storedAddresses = JSON.parse(localStorage.getItem('addresses') || '[]');
+    localStorage.setItem('addresses', JSON.stringify([...storedAddresses, newAddress]));
+    onAddAddress(newAddress);
     setName('');
     setEmail('');
     setPassword('');
@@ -73,7 +79,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAddAddress, searchedAddress
     setBairro('');
     setUf('');
     setComplement('');
-    setModalOpen(false); // Fechar o modal após o envio
+    setModalOpen(false);
   };
 
   return (

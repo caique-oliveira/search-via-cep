@@ -9,7 +9,7 @@ const mapContainerStyle = {
 };
 
 const Map = ({ selectedLocation }) => {
-  const center = selectedLocation || { lat: -3.745, lng: -38.523 }; // Ponto central padrão
+  const center = selectedLocation || { lat: -3.745, lng: -38.523 };
 
   return (
     <LoadScript googleMapsApiKey='AIzaSyA_onFn83DaTLlun1WRR8w-h3PGbyxyndc'>
